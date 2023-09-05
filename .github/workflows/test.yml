@@ -10,4 +10,4 @@ jobs:
     - uses: cachix/install-nix-action@v22
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - run: nix develop -c 'nix-instantiate --eval leetcode.nix | jq -r "fromjson | ."'   
+    - run: nix-shell --run 'nix-instantiate --eval leetcode.nix | jq -r "fromjson | ."'   
