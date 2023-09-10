@@ -39,7 +39,7 @@ let
     in
     improve 1 iterations;
   # https://leetcode.com/problems/two-sum/
-  twosum = { nums, target, debug ? false}:
+  twosum = { nums, target, debug ? false }:
     let
       impl = (builtins.foldl'
         (acc: num:
@@ -55,31 +55,18 @@ let
             if compAddsToTarget
             then acc // {
               ans = [ acc.h.${complement} acc.i ];
-              detected = true;
             }
             else acc // {
               h = acc.h // {
-                ${complement} = acc.i;
+                ${builtins.toString num} = acc.i;
               };
               i = acc.i + 1;
-              nums = acc.nums ++ [ num ];
-              complements = acc.complements ++ [ complement ];
-              sums = acc.sums ++ [ sum ];
-              doesAddToTarget = acc.doesAddToTarget ++ [ compAddsToTarget ];
-              everExists = acc.everExists ++ [ exists ];
-
             }
         )
         {
           i = 0;
-          h = {};
+          h = { };
           ans = [ ];
-          nums = [ ];
-          complements = [ ];
-          detected = false;
-          sums = [ ];
-          doesAddToTarget = [];
-          everExists = [];
         }
         nums);
     in
@@ -89,11 +76,7 @@ in
 # using builtins.toJSON to eagerly evaluate the tests
   # jq then pretty prints the result
 builtins.toJSON {
-  twosum = twosum {
-    nums = [ 2 7 11 15 ];
-    target = 9;
-    debug = true;
-  };
+
   tests = [
     (assert remainder 10 3 == 1; "remainder works")
     (assert  perfectNumber 6; "six is perfect")
@@ -107,14 +90,18 @@ builtins.toJSON {
     (assert fib 6 == 8; "fib 6 is 8")
     (assert facTCO 15 == 1307674368000; "tail call optimized factorial works")
     (assert ftco 100 == 5050; "tail call optimized fibonacci works")
-    # # nums = [2,7,11,15], target = 9
-    # (assert twosum [2 7 11 15] 9 == [0 1]; "two sum works")
-    # # Input: nums = [3,2,4], target = 6
-    # # Output: [1,2]
-    # (assert twosum [3 2 4] 6 == [1 2]; "two sum works")
-    # # Input: nums = [3,3], target = 6
-    # # Output: [0,1]
-    # (assert twosum [3 3] 6 == [0 1]; "two sum works")
+    (
+      assert twosum { nums = [ 2 7 11 15 ]; target = 9; } == [ 0 1 ];
+      "two sum works"
+    )
+    (
+      assert twosum { nums = [ 3 2 4 ]; target = 6; } == [ 1 2 ];
+      "two sum works"
+    )
+    (
+      assert twosum { nums = [ 3 3 ]; target = 6; } == [ 0 1 ];
+      "two sum works"
+    )
 
   ];
 }
