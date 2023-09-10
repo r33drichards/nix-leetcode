@@ -1,8 +1,10 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> { } }:
 pkgs.mkShell {
   packages = [
     pkgs.git
-    pkgs.nixfmt
+    pkgs.nixpkgs-fmt
     pkgs.jq
+    pkgs.just
+    pkgs.watch
   ];
 }
