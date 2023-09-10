@@ -41,21 +41,20 @@ let
   # https://leetcode.com/problems/two-sum/
   twosum = { nums, target, debug ? false}:
     let
-      h = { };
-      add = (h: k: v: h // { k = v; });
       impl = (builtins.foldl'
         (acc: num:
           let
             comp = target - num;
             complement = builtins.toString (comp);
-            exists = builtins.hasAttr complement h;
-            compAddsToTarget = exists && comp + num == target;
+            exists = builtins.hasAttr complement acc.h;
+            compAddsToTarget = exists && sum == target;
+            sum = comp + num;
           in
           if builtins.length acc.ans > 0 then acc
           else
             if compAddsToTarget
             then acc // {
-              ans = [ h.${complement} acc.i ];
+              ans = [ acc.h.${complement} acc.i ];
               detected = true;
             }
             else acc // {
@@ -65,15 +64,22 @@ let
               i = acc.i + 1;
               nums = acc.nums ++ [ num ];
               complements = acc.complements ++ [ complement ];
+              sums = acc.sums ++ [ sum ];
+              doesAddToTarget = acc.doesAddToTarget ++ [ compAddsToTarget ];
+              everExists = acc.everExists ++ [ exists ];
+
             }
         )
         {
           i = 0;
-          h = h;
+          h = {};
           ans = [ ];
           nums = [ ];
           complements = [ ];
           detected = false;
+          sums = [ ];
+          doesAddToTarget = [];
+          everExists = [];
         }
         nums);
     in
