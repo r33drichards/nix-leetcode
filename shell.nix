@@ -4,5 +4,6 @@ pkgs.mkShell {
     pkgs.git
     pkgs.nixfmt
     pkgs.jq
+    pkgs.just
   ];
 }

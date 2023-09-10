@@ -37,6 +37,36 @@ let
         if iterations == 0 then guess
         else improve (nextGuess guess) (iterations - 1);
     in improve 1 iterations;
+  # https://leetcode.com/problems/two-sum/
+  twosum = nums: target:
+    let 
+      h = {};
+      add = (h: k: v: h // {k = v;});
+      get = (h: k: h.k);
+    in 
+      (builtins.foldl' 
+        (acc: num: 
+          let 
+            complement = target - num;
+          in 
+            if builtins.length acc.ans > 0 then acc
+            else
+            if builtins.hasAttr (builtins.toString complement) h
+            then acc // {
+              ans = [get h complement acc.i];
+            }
+            else acc // {
+              acc.h = add acc.h (builtins.toString complement) acc.i;
+              i = acc.i + 1;
+            }
+        )
+        {
+          i = 0;
+          h = h;
+          ans = [];
+
+        }
+        nums).ans;
 
   # pickGifts = gifts: k:
 in
@@ -56,5 +86,15 @@ in
       (assert fib 6 == 8; "fib 6 is 8")
       (assert facTCO 15 == 1307674368000; "tail call optimized factorial works")
       (assert ftco 100 == 5050; "tail call optimized fibonacci works")
+      # # nums = [2,7,11,15], target = 9
+      # (assert twosum [2 7 11 15] 9 == [0 1]; "two sum works")
+      # # Input: nums = [3,2,4], target = 6
+      # # Output: [1,2]
+      # (assert twosum [3 2 4] 6 == [1 2]; "two sum works")
+      # # Input: nums = [3,3], target = 6
+      # # Output: [0,1]
+      # (assert twosum [3 3] 6 == [0 1]; "two sum works")
+
     ];
+    twosum = twosum [2 7 11 15] 9;  
   }
