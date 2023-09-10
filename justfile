@@ -1,5 +1,5 @@
 test:
     nix-instantiate --eval leetcode.nix | jq -r 'fromjson | .'
 
-wtest:
+w:
     watch "nix-instantiate --eval leetcode.nix | jq -r 'fromjson | .'"
